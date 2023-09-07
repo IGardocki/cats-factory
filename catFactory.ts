@@ -1,46 +1,19 @@
-// Cat interface
-export interface Cat {
-  action(): string;
-}
+import { type Cat, Romad, Mimi } from "./cats";
+import { config } from "./configurator";
 
-// Concrete cats
-export class Romad implements Cat {
-  action(): string {
-    return "scream for food";
+export class CatFactory {
+  static createCat(type?: string): Cat {
+    if (type === undefined) {
+      type = config.cat;
+    }
+
+    switch (type) {
+      case "Romad":
+        return new Romad();
+      case "Mimi":
+        return new Mimi();
+      default:
+        throw new Error("Unknown cat type.");
+    }
   }
 }
-
-export class Mimi implements Cat {
-  action(): string {
-    return "bite my toes at 3 am";
-  }
-}
-
-// Cat Factory interface
-export interface CatFactory {
-  createCat(): Cat;
-}
-
-// Concrete Cat Factories
-export class RomadFactory implements CatFactory {
-  createCat(): Cat {
-    return new Romad();
-  }
-}
-
-export class MimiFactory implements CatFactory {
-  createCat(): Cat {
-    return new Mimi();
-  }
-}
-
-// Client code
-const romadFactory: CatFactory = new RomadFactory();
-const romad: Cat = romadFactory.createCat();
-console.log('Romad likes to', romad.action()); 
-// Romad screams for food
-
-const mimiFactory: CatFactory = new MimiFactory();
-const mimi: Cat = mimiFactory.createCat();
-console.log('Mimi likes to', mimi.action()); 
-// Mimi bites my toes at 3 am
